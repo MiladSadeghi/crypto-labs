@@ -5,5 +5,5 @@
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  font-family: "Noto Sans" ,Georgia, 'Times New Roman', Times, serif;
+  font-family: "Noto Sans" ,Georgia, 'Times New Roman', Times, serif !important;
 }

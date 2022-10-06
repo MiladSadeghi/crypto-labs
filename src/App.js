@@ -1,15 +1,16 @@
 import { Box, Grid } from "@mui/material";
 import React, { useState, createContext } from "react";
-import CurrencyData from "component/section/CurrencyData";
-import Capitalization from "component/section/Capitalization";
+import CurrencyData from "section/CurrencyData";
+import Capitalization from "section/Capitalization";
 
 export const AppContext = createContext();
 
 function App() {
   const [currency, setCurrency] = useState("bitcoin");
+  const [vsCurrency, setVsCurrency] = useState("usd");
 
   return (
-    <AppContext.Provider value={{currency, setCurrency}}>
+    <AppContext.Provider value={{currency, setCurrency, vsCurrency, setVsCurrency}}>
       <div style={{backgroundColor: "rgb(21,21,32)"}}>
       <Box 
         sx={{

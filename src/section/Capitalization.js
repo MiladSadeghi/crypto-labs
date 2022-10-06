@@ -1,7 +1,10 @@
 import { Box, styled, Typography } from '@mui/material';
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { AppContext } from "App";
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
+import { getAllCurrencies } from 'component/api';
+import Currencies from './Currencies';
+import Loading from 'component/Loading';
 
 const SelectBox = styled('select')({
   backgroundColor: "rgb(64,64,79)",
@@ -26,12 +29,13 @@ const SelectBox = styled('select')({
 })
 
 const Capitalization = () => {
-  const {currency, setCurrency} = useContext(AppContext);
+  const {currency, setCurrency, vsCurrency, setVsCurrency} = useContext(AppContext);
   const searchInput = useRef();
   const magnifyIcon = useRef();
+  const [currencies, setCurrencies] = useState([]);
 
   const currencyChange = (event) => {
-    setCurrency(event.target.value);
+    setVsCurrency(event.target.value);
   }
 
   const revealInput = (event) => {
@@ -42,6 +46,14 @@ const Capitalization = () => {
       searchInput.current.style.right = "-100%";
     }
   }
+
+  useEffect(() => {
+    const getCurrency = async () => {
+      const data = await getAllCurrencies(vsCurrency);
+      setCurrencies([...data])
+    }
+    getCurrency();
+  }, [vsCurrency]);
 
   return (
     <Box 
@@ -66,7 +78,8 @@ const Capitalization = () => {
         alignItems: "center",
         justifyContent: "space-between",
         position: "relative",
-        overflowX: "hidden"
+        overflowX: "hidden",
+        pb: 3
       }}>
         <Typography 
           variant='h6' 
@@ -83,7 +96,7 @@ const Capitalization = () => {
           display: "flex",
           alignItems: "center"
         }}>
-          <SelectBox value={currency} onChange={currencyChange}>
+          <SelectBox value={vsCurrency} onChange={currencyChange}>
             <option value="usd">USD</option>
             <option value="eur">EUR</option>
             <option value="rub">RUB</option>
@@ -158,6 +171,38 @@ const Capitalization = () => {
             }}
             />
       </Box>
+      {
+        currencies.length === 0 ?
+        <Loading  /> :
+        <Box sx={{
+          overflowY: "auto",
+          position: "absolute",
+          height: "calc(100% - 101.6px)",
+          "&::-webkit-scrollbar": {
+            width: "3.9px" 
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "rgb(43 43 64 / 61%)",
+          },
+          "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "rgb(108 108 120)",
+          borderRadius: "20px"
+          }
+        }}>
+          {
+          currencies.map((coin) => 
+            <Currencies
+              key={coin.name}
+              name={coin.name} 
+              image={coin.image} 
+              currentPrice={coin.current_price}
+              marketCap={coin.market_cap}
+              id={coin.id}
+              pickedCurrency={currency}
+              />
+          )}
+        </Box>
+      }
     </Box>
   );
 }

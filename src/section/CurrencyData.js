@@ -3,7 +3,7 @@ import React from 'react';
 const CurrencyData = () => {
   return (
     <div>
-      
+      test
     </div>
   );
 }
