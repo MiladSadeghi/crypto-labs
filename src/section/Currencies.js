@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { AppContext } from "App";
 
 const Currencies = ({name, image, currentPrice, marketCap, pickedCurrency, id}) => {
-  const {setCurrency} = useContext(AppContext);
+  const {vsCurrency ,setCurrency} = useContext(AppContext);
 
   const numberWithSpaces = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -41,7 +41,7 @@ const Currencies = ({name, image, currentPrice, marketCap, pickedCurrency, id}) 
           <Typography component={"p"} fontSize={".7rem"} sx={{lineHeight: 1.6, color: selectedCoinPricesStyle()}} >${numberWithSpaces(marketCap)}</Typography>
         </Box>
       </Box>
-      <Typography component={"p"} fontSize={".7rem"} sx={{alignSelf: "self-end", pb: .5, color: selectedCoinPricesStyle()}}>{currentPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD',})}
+      <Typography component={"p"} fontSize={".7rem"} sx={{alignSelf: "self-end", pb: .5, color: selectedCoinPricesStyle()}}>{currentPrice.toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`,})}
       </Typography>
     </Box>
   );

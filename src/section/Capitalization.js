@@ -59,8 +59,7 @@ const Capitalization = () => {
     <Box 
       onClick={revealInput}
       sx={{
-      py: 3,
-      px: 3,
+      p: 3,
       height: "100%",
       position: "relative",
       "&::before": {
