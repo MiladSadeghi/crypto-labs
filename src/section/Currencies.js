@@ -17,6 +17,8 @@ const Currencies = ({name, image, currentPrice, marketCap, pickedCurrency, id}) 
     setCurrency(id)
   }
 
+  const currencySymbol = marketCap.toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`,}).replace(/,*[0-9]+./g, '');
+
   return (
     <Box onClick={changeCoin} sx={{
       p: 1,
@@ -38,7 +40,7 @@ const Currencies = ({name, image, currentPrice, marketCap, pickedCurrency, id}) 
         }} />
         <Box sx={{my: "auto"}}>
           <Typography component={"h4"} fontSize={"1rem"} fontWeight={600} sx={{lineHeight: 1}}>{name}</Typography>
-          <Typography component={"p"} fontSize={".7rem"} sx={{lineHeight: 1.6, color: selectedCoinPricesStyle()}} >${numberWithSpaces(marketCap)}</Typography>
+          <Typography component={"p"} fontSize={".7rem"} sx={{lineHeight: 1.6, color: selectedCoinPricesStyle()}} >{currencySymbol}{numberWithSpaces(marketCap)}</Typography>
         </Box>
       </Box>
       <Typography component={"p"} fontSize={".7rem"} sx={{alignSelf: "self-end", pb: .5, color: selectedCoinPricesStyle()}}>{currentPrice.toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`,})}

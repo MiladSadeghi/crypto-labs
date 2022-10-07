@@ -54,7 +54,7 @@ const CurrencyData = () => {
             {coinData.market_data.current_price[vsCurrency].toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`, minimumFractionDigits: 0})}
           </Typography>
           <Box sx={{display: "flex", alignItems: "center"}}>
-            <Chip label={coinData.market_data.price_change_percentage_24h} sx={{ml: 1, height: "20px", backgroundColor: coinData.market_data.price_change_percentage_24h >= 1 ? "rgb(40,182,85)": "red", color: "#dfdfdf", fontSize: ".9rem", fontWeight: 700}} icon={<Straight sx={{color: "#fff !important", height: "0.7em", width: "0.7em", ...(coinData.market_data.price_change_percentage_24h < 1 && {transform: "rotate(180deg)"}) }} />} />
+            <Chip label={`${(Math.abs(coinData.market_data.price_change_percentage_24h_in_currency[vsCurrency]).toFixed(2))}%`} sx={{ml: 1, height: "20px", backgroundColor: coinData.market_data.price_change_percentage_24h >= 1 ? "rgb(40,182,85)": "red", color: "#dfdfdf", fontSize: ".9rem", fontWeight: 700}} icon={<Straight sx={{color: "#fff !important", height: "0.7em", width: "0.7em", ...(coinData.market_data.price_change_percentage_24h_in_currency[vsCurrency] < 1 && {transform: "rotate(180deg)"}) }} />} />
           </Box>
         </Box>
       </Box>
@@ -63,7 +63,7 @@ const CurrencyData = () => {
           icon={<Anchor sx={{color: 'rgb(75,76,93)', fontSize: "1.6rem"}} />} 
           title={"Market Cap"} 
           borderdir="start"
-          
+
         />
         <StatBarHeader 
           icon={<BoltOutlined sx={{color: 'rgb(75,76,93)', fontSize: "1.6rem"}} />} 
