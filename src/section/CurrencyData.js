@@ -4,13 +4,24 @@ import { AppContext } from 'App';
 import { getCoinData } from 'component/api';
 import Loading from 'component/Loading';
 import { Anchor, AutorenewRounded, BoltOutlined, OfflineBoltOutlined, Straight } from '@mui/icons-material';
-import { StatBarHeader } from "component/commons"
+import { StatBarHeader } from "component/commons";
+import { AdvancedRealTimeChart, CopyrightStyles } from "react-ts-tradingview-widgets";
+
 const CurrencyData = () => {
   const {currency, vsCurrency} = useContext(AppContext);
   const [coinData, setCoinData] = useState([]);
   let supplyPercent = useRef(0);
   let marketCapToBTC = useRef(0);
   let volume24ToBtc = useRef(0);
+
+  const styles  = {
+    parent: {
+      position: "absolute",
+      top: "4px",
+      right: "48px",
+      fontSize: "12px"
+    }
+  };
 
   useEffect(() => {
     const coin = async () => {
@@ -68,7 +79,7 @@ const CurrencyData = () => {
           </Box>
         </Box>
       </Box>
-      <Box sx={{mt: 3, width: "100%", display: "flex", alignItems: "center", color: "#dfdfdf"}}>
+      <Box sx={{mt: 2, width: "100%", display: "flex", alignItems: "center", color: "#dfdfdf"}}>
         <StatBarHeader 
           icon={<Anchor sx={{color: 'rgb(75,76,93)', fontSize: "1.6rem"}} />} 
           title={"Market Cap"} 
@@ -118,6 +129,9 @@ const CurrencyData = () => {
         <Typography component="p" sx={{px: 2, py: 1.7, fontSize: '0.9rem', width: "100%"}}>
           {String(coinData.market_data.circulating_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
         </Typography>
+      </Box>
+      <Box sx={{position: "relative"}}>
+        <AdvancedRealTimeChart symbol={`${coinData.symbol}usdt`} theme="dark" height={"324px"} width={"100%"} timezone={Intl.DateTimeFormat().resolvedOptions().timeZone} copyrightStyles={styles}></AdvancedRealTimeChart>
       </Box>
     </Box>
   );
