@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from 'react';
 
 
-export const StatBarHeader = ({icon, title, borderdir}) => {
+export const StatBarHeader = ({icon, title, borderdir, children}) => {
   let borderR;
   borderdir === "start" ? 
   borderR = {borderRadius: "12px 0 0 12px"} : 
@@ -15,6 +15,7 @@ export const StatBarHeader = ({icon, title, borderdir}) => {
         {icon}
         <Typography component="p" sx={{ml: 1.5, fontWeight: 600, fontSize: "0.9rem"}}>{title}</Typography>
       </Box>
+      {children}
     </Box>
   )
 }

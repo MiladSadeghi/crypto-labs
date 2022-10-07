@@ -1,5 +1,5 @@
-import { Box, Chip, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import { Box, Chip, LinearProgress, Typography } from '@mui/material';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AppContext } from 'App';
 import { getCoinData } from 'component/api';
 import Loading from 'component/Loading';
@@ -8,11 +8,21 @@ import { StatBarHeader } from "component/commons"
 const CurrencyData = () => {
   const {currency, vsCurrency} = useContext(AppContext);
   const [coinData, setCoinData] = useState([]);
+  let supplyPercent = useRef(0);
+  let marketCapToBTC = useRef(0);
+  let volume24ToBtc = useRef(0);
 
   useEffect(() => {
     const coin = async () => {
       const data = await getCoinData(currency);
       setCoinData(data);
+      supplyPercent.current = Number(((data.market_data.total_supply / data.market_data.max_supply) * 100)).toFixed(0);
+      marketCapToBTC.current = 0;
+      volume24ToBtc.current = 0;
+      data.tickers.forEach(item => {
+        marketCapToBTC.current += item.converted_volume.btc
+        volume24ToBtc.current += item.converted_last.btc
+      })
     }
     coin();
   }, [])
@@ -63,8 +73,7 @@ const CurrencyData = () => {
           icon={<Anchor sx={{color: 'rgb(75,76,93)', fontSize: "1.6rem"}} />} 
           title={"Market Cap"} 
           borderdir="start"
-
-        />
+          />
         <StatBarHeader 
           icon={<BoltOutlined sx={{color: 'rgb(75,76,93)', fontSize: "1.6rem"}} />} 
           title={"Volume (24h)"}
@@ -78,6 +87,37 @@ const CurrencyData = () => {
           title={"Circulating Supply"}
           borderdir="end"
         />
+      </Box>
+      <Box sx={{display: "flex", justifyContent: "space-between", color: "#dfdfdf"}}>
+        <Box sx={{px: 2, py: 1.7, width: "100%"}}>
+          <Typography component="p" sx={{fontSize: '0.9rem', width: "100%"}}>
+            {coinData.market_data.market_cap[vsCurrency].toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`, minimumFractionDigits: 0})}
+          </Typography>
+          <Typography component="p" sx={{fontSize: "0.8rem", color: "rgb(142 144 149)", mt: 1.5}}>{(marketCapToBTC.current).toFixed(1)} {(coinData.symbol).toUpperCase()}</Typography>
+        </Box>
+        <Box sx={{px: 2, py: 1.7, width: "100%"}}>
+          <Typography component="p" sx={{fontSize: '0.9rem', width: "100%"}}>
+              {coinData.market_data.total_volume[vsCurrency].toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`, minimumFractionDigits: 0})}
+          </Typography>
+          <Typography component="p" sx={{fontSize: "0.8rem", color: "rgb(142 144 149)", mt: 1.5}}>{(volume24ToBtc.current).toFixed(1)} {(coinData.symbol).toUpperCase()}</Typography>
+        </Box>
+        <Box sx={{px: 2, py: 1.7, width: "100%"}}>
+          <Typography component="p" sx={{fontSize: '0.9rem'}}>
+            {String(coinData.market_data.max_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
+          </Typography>
+          <Box sx={{display: "flex", alignItems: "center", width: "100%", mt: 1.5}}>
+            <LinearProgress variant="determinate" color="primary" value={Number(supplyPercent.current)} 
+              sx={{bgcolor: "rgb(37,41,60)", width: "40%", borderRadius: "25px",
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: `rgb(39, 115, 163) 161, 242)`
+              }}}
+              />
+            <Typography component="p" sx={{fontSize: "0.8rem", ml: 1, color: "rgb(142 144 149)"}}>{supplyPercent.current}%</Typography>
+          </Box>
+        </Box>
+        <Typography component="p" sx={{px: 2, py: 1.7, fontSize: '0.9rem', width: "100%"}}>
+          {String(coinData.market_data.circulating_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
+        </Typography>
       </Box>
     </Box>
   );
