@@ -16,10 +16,7 @@ const CurrencyData = () => {
 
   const styles  = {
     parent: {
-      position: "absolute",
-      top: "4px",
-      right: "48px",
-      fontSize: "12px"
+      display: "none"
     }
   };
 
@@ -40,7 +37,7 @@ const CurrencyData = () => {
 
   if (coinData.length === 0) return <Loading />
   return (
-    <Box sx={{p: 3}}>
+    <Box sx={{p: 3, height: "100%", display: "flex", flexDirection: "column"}}>
       
       <Typography
           variant='h6' 
@@ -130,8 +127,8 @@ const CurrencyData = () => {
           {String(coinData.market_data.circulating_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
         </Typography>
       </Box>
-      <Box sx={{position: "relative"}}>
-        <AdvancedRealTimeChart symbol={`${coinData.symbol}usdt`} theme="dark" height={"324px"} width={"100%"} timezone={Intl.DateTimeFormat().resolvedOptions().timeZone} copyrightStyles={styles}></AdvancedRealTimeChart>
+      <Box sx={{flexGrow: 1}}>
+        <AdvancedRealTimeChart symbol={`${coinData.symbol}usdt`} theme="dark" height={"100%"} width={"100%"} timezone={Intl.DateTimeFormat().resolvedOptions().timeZone} copyrightStyles={styles}></AdvancedRealTimeChart>
       </Box>
     </Box>
   );
