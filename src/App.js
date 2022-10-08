@@ -12,7 +12,7 @@ function App() {
   const [showCapSide, setShowCapSide] = useState(false);
 
   return (
-    <AppContext.Provider value={{currency, setCurrency, vsCurrency, setVsCurrency, showCapSide}}>
+    <AppContext.Provider value={{currency, setCurrency, vsCurrency, setVsCurrency, showCapSide, setShowCapSide}}>
       <div style={{backgroundColor: "rgb(21,21,32)"}}>
       <Box 
         sx={{
@@ -30,7 +30,7 @@ function App() {
           </Grid>
         </Grid>
         <Box className={`${styles.openCapitalization} ${showCapSide && styles.moveIcon}`} >
-          <input className={styles.checkbox} type="checkbox" value={showCapSide} onChange={() => setShowCapSide(!showCapSide)} />
+          <input className={styles.checkbox} type="checkbox" checked={showCapSide} value={showCapSide} onChange={() => setShowCapSide(!showCapSide)} />
           <div className={`${styles.line1} ${styles.lines}`} />
           <div className={`${styles.line2} ${styles.lines}`} />
           <div className={`${styles.line3} ${styles.lines}`} />

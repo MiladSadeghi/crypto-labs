@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { AppContext } from "App";
 
 const Currencies = ({name, image, currentPrice, marketCap, pickedCurrency, id}) => {
-  const {vsCurrency ,setCurrency} = useContext(AppContext);
+  const {vsCurrency ,setCurrency, setShowCapSide} = useContext(AppContext);
 
   const numberWithSpaces = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -14,7 +14,8 @@ const Currencies = ({name, image, currentPrice, marketCap, pickedCurrency, id}) 
   }
 
   const changeCoin = () => {
-    setCurrency(id)
+    setCurrency(id);
+    setShowCapSide(false);
   }
 
   const currencySymbol = marketCap.toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`,}).replace(/,*[0-9]+./g, '');

@@ -7,6 +7,8 @@ import Currencies from './Currencies';
 import Loading from 'component/Loading';
 import { HighlightOffOutlined } from '@mui/icons-material';
 import styles from "../Styles.module.scss";
+import SearchedCoin from './SearchedCoin';
+import { search } from 'component/api';
 
 const SelectBox = styled('select')({
   backgroundColor: "rgb(64,64,79)",
@@ -32,10 +34,16 @@ const SelectBox = styled('select')({
 
 const Capitalization = () => {
   const {currency, vsCurrency, setVsCurrency, showCapSide, setShowCapSide} = useContext(AppContext);
+
+  const [currencies, setCurrencies] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [searched, setSearched] = useState([]);
+
   const searchDiv = useRef();
   const magnifyIcon = useRef();
   const closeSearchDivIcon = useRef();
-  const [currencies, setCurrencies] = useState([]);
+  const ignoreMount = useRef(false);
+  const timeOut = useRef()
 
   const currencyChange = (event) => {
     setVsCurrency(event.target.value);
@@ -44,6 +52,8 @@ const Capitalization = () => {
   const revealInput = (event) => {
     if (event.currentTarget === closeSearchDivIcon.current) {
       searchDiv.current.style.right = "-100%";
+      setSearched([]);
+      setSearchInput("");
     } else if (event.currentTarget === magnifyIcon.current) {
       searchDiv.current.focus();
       searchDiv.current.style.right = "0%";
@@ -57,6 +67,27 @@ const Capitalization = () => {
     }
     getCurrency();
   }, [vsCurrency]);
+
+  useEffect(() => {
+    
+    if(ignoreMount.current) {
+      if(searchInput.length !== 0) {
+        clearTimeout( timeOut.current );
+        timeOut.current = setTimeout(async() => {
+        const data = await search(searchInput);
+        setSearched(data.coins)
+      }, 3000);
+      } else {
+        setSearched([]);
+      }
+    } else {
+      ignoreMount.current = true;
+    }
+  }, [searchInput]);
+
+  const handleChange = (event) => {
+    setSearchInput(event.target.value)
+  }
 
   return (
     <Box 
@@ -169,14 +200,15 @@ const Capitalization = () => {
         }}>
           <Box 
             component={"input"}
+            value={searchInput}
+            onChange={handleChange}
             sx={{
               width: "100%",
-              height: "70%",
+              height: "100%",
               outline: "none",
               border: "none",
               borderRadius: "10px",
               bgcolor: "rgb(108 108 120)",
-              py: "13px",
               pl: "15px",
               pr: "30px",
               color: "#dfdfdf"
@@ -186,13 +218,14 @@ const Capitalization = () => {
         </Box>
       </Box>
       {
-        currencies.length === 0 ?
+        (currencies.length) === 0 ?
         <Loading  /> :
         <Box sx={{position: "relative", width: "100%", height: "100%"}}>
           <Box sx={{
             overflowY: "auto",
             position: "absolute",
             height: "100%",
+            width: "100%",
             "&::-webkit-scrollbar": {
               width: "3.9px" 
             },
@@ -205,6 +238,17 @@ const Capitalization = () => {
             }
           }}>
             {
+              searched.length !== 0 ?
+              searched.map(coin => 
+                <SearchedCoin
+                  key={coin.id}
+                  name={coin.name}
+                  image={coin.large}
+                  id={coin.id}
+                  pickedCurrency={currency}
+                />
+              )
+            :
             currencies.map((coin) => 
               <Currencies
                 key={coin.name}
