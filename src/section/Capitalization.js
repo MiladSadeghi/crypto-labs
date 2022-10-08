@@ -114,7 +114,7 @@ const Capitalization = () => {
             <option value="myr">MYR</option>
             <option value="nzd">NZD</option>
             <option value="pln">PLN</option>
-            <option value="sdd">SGD</option>
+            <option value="sgd">SGD</option>
             <option value="uah">UAH</option>
             <option value="zar">ZAR</option>
             <option value="ars">ARS</option>

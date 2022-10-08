@@ -5,7 +5,7 @@ import { getCoinData } from 'component/api';
 import Loading from 'component/Loading';
 import { Anchor, AutorenewRounded, BoltOutlined, OfflineBoltOutlined, Straight } from '@mui/icons-material';
 import { StatBarHeader } from "component/commons";
-import { AdvancedRealTimeChart, CopyrightStyles } from "react-ts-tradingview-widgets";
+import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 
 const CurrencyData = () => {
   const {currency, vsCurrency} = useContext(AppContext);
@@ -14,13 +14,8 @@ const CurrencyData = () => {
   let marketCapToBTC = useRef(0);
   let volume24ToBtc = useRef(0);
 
-  const styles  = {
-    parent: {
-      display: "none"
-    }
-  };
-
   useEffect(() => {
+    setCoinData([]);
     const coin = async () => {
       const data = await getCoinData(currency);
       setCoinData(data);
@@ -33,7 +28,7 @@ const CurrencyData = () => {
       })
     }
     coin();
-  }, [])
+  }, [currency]);
 
   if (coinData.length === 0) return <Loading />
   return (
@@ -105,30 +100,35 @@ const CurrencyData = () => {
         </Box>
         <Box sx={{px: 2, py: 1.7, width: "100%"}}>
           <Typography component="p" sx={{fontSize: '0.9rem', width: "100%"}}>
-              {coinData.market_data.total_volume[vsCurrency].toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`, minimumFractionDigits: 0})}
+            {coinData.market_data.total_volume[vsCurrency].toLocaleString('en-US', { style: 'currency', currency: `${vsCurrency}`, minimumFractionDigits: 0})}
           </Typography>
           <Typography component="p" sx={{fontSize: "0.8rem", color: "rgb(142 144 149)", mt: 1.5}}>{(volume24ToBtc.current).toFixed(1)} {(coinData.symbol).toUpperCase()}</Typography>
         </Box>
         <Box sx={{px: 2, py: 1.7, width: "100%"}}>
-          <Typography component="p" sx={{fontSize: '0.9rem'}}>
-            {String(coinData.market_data.max_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
-          </Typography>
-          <Box sx={{display: "flex", alignItems: "center", width: "100%", mt: 1.5}}>
-            <LinearProgress variant="determinate" color="primary" value={Number(supplyPercent.current)} 
-              sx={{bgcolor: "rgb(37,41,60)", width: "40%", borderRadius: "25px",
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: `rgb(39, 115, 163) 161, 242)`
-              }}}
-              />
-            <Typography component="p" sx={{fontSize: "0.8rem", ml: 1, color: "rgb(142 144 149)"}}>{supplyPercent.current}%</Typography>
-          </Box>
+        {(coinData.market_data.max_supply !== null) ? 
+          <Box>
+            <Typography component="p" sx={{fontSize: '0.9rem'}}>
+              {String(coinData.market_data.max_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
+            </Typography>
+            <Box sx={{display: "flex", alignItems: "center", width: "100%", mt: 1.5}}>
+              <LinearProgress variant="determinate" color="primary" value={Number(supplyPercent.current)} 
+                sx={{bgcolor: "rgb(37,41,60)", width: "40%", borderRadius: "25px",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: `rgb(39, 115, 163) 161, 242)`
+                }}}
+                />
+              <Typography component="p" sx={{fontSize: "0.8rem", ml: 1, color: "rgb(142 144 149)"}}>{supplyPercent.current}%</Typography>
+            </Box>
+          </Box> :
+          <Typography component="p" sx={{color: "rgb(142 144 149)"}}>Nothing Found</Typography>
+        }
         </Box>
         <Typography component="p" sx={{px: 2, py: 1.7, fontSize: '0.9rem', width: "100%"}}>
           {String(coinData.market_data.circulating_supply).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} {(coinData.symbol).toUpperCase()}
         </Typography>
       </Box>
       <Box sx={{flexGrow: 1}}>
-        <AdvancedRealTimeChart symbol={`${coinData.symbol}usdt`} theme="dark" height={"100%"} width={"100%"} timezone={Intl.DateTimeFormat().resolvedOptions().timeZone} copyrightStyles={styles}></AdvancedRealTimeChart>
+        <AdvancedRealTimeChart symbol={`${coinData.symbol}usdt`} theme="dark" height={"100%"} width={"100%"} timezone={Intl.DateTimeFormat().resolvedOptions().timeZone} copyrightStyles={{parent: {display: "none"}}}></AdvancedRealTimeChart>
       </Box>
     </Box>
   );
