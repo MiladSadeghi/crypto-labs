@@ -5,6 +5,8 @@ import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import { getAllCurrencies } from 'component/api';
 import Currencies from './Currencies';
 import Loading from 'component/Loading';
+import { HighlightOffOutlined } from '@mui/icons-material';
+import styles from "../Styles.module.scss";
 
 const SelectBox = styled('select')({
   backgroundColor: "rgb(64,64,79)",
@@ -29,9 +31,10 @@ const SelectBox = styled('select')({
 })
 
 const Capitalization = () => {
-  const {currency, setCurrency, vsCurrency, setVsCurrency} = useContext(AppContext);
-  const searchInput = useRef();
+  const {currency, vsCurrency, setVsCurrency, showCapSide, setShowCapSide} = useContext(AppContext);
+  const searchDiv = useRef();
   const magnifyIcon = useRef();
+  const closeSearchDivIcon = useRef();
   const [currencies, setCurrencies] = useState([]);
 
   const currencyChange = (event) => {
@@ -39,11 +42,11 @@ const Capitalization = () => {
   }
 
   const revealInput = (event) => {
-    if (magnifyIcon.current && magnifyIcon.current.contains(event.target)) {
-      searchInput.current.style.right = "0%";
-      searchInput.current.focus();
-    } else if (event.target !== searchInput.current){
-      searchInput.current.style.right = "-100%";
+    if (event.currentTarget === closeSearchDivIcon.current) {
+      searchDiv.current.style.right = "-100%";
+    } else if (event.currentTarget === magnifyIcon.current) {
+      searchDiv.current.focus();
+      searchDiv.current.style.right = "0%";
     }
   }
 
@@ -57,11 +60,13 @@ const Capitalization = () => {
 
   return (
     <Box 
-      onClick={revealInput}
+      className={`${styles.capitalization} ${showCapSide ? styles.showCap : ""}`}
       sx={{
       p: 3,
       height: "100%",
       position: "relative",
+      display: "flex",
+      flexDirection: "column",
       "&::before": {
         position: "absolute",
         content: `''`,
@@ -77,8 +82,8 @@ const Capitalization = () => {
         alignItems: "center",
         justifyContent: "space-between",
         position: "relative",
-        overflowX: "hidden",
-        pb: 3
+        overflow: "clip",
+        mb: 3
       }}>
         <Typography 
           variant='h6' 
@@ -149,57 +154,69 @@ const Capitalization = () => {
             sx={{
               color: "#dfdfdf",
               fontSize: "1.3rem",
-              ml: 1
+              ml: 1,
+              cursor: "pointer"
             }} />
         </Box>
+        <Box ref={searchDiv} sx={{
+          position: "absolute",
+          right: "-100%",
+          width: "100%",
+          height: "100%",
+          transition: "right 0.35s ease",
+          display: "flex",
+          alignItems: "center"
+        }}>
           <Box 
             component={"input"}
-            ref={searchInput}
             sx={{
-              position: "absolute",
-              right: "-100%",
               width: "100%",
               height: "70%",
               outline: "none",
               border: "none",
               borderRadius: "10px",
               bgcolor: "rgb(108 108 120)",
-              padding: "13px 15px",
-              color: "#dfdfdf",
-              transition: "right 0.35s ease"
+              py: "13px",
+              pl: "15px",
+              pr: "30px",
+              color: "#dfdfdf"
             }}
-            />
+          />
+          <HighlightOffOutlined ref={closeSearchDivIcon} onClick={revealInput} sx={{position: "absolute", right: 8, fontSize: "1.1rem", color: "#dfdfdf", cursor: "pointer"}} />
+        </Box>
       </Box>
       {
         currencies.length === 0 ?
         <Loading  /> :
-        <Box sx={{
-          overflowY: "auto",
-          position: "absolute",
-          height: "calc(100% - 101.6px)",
-          "&::-webkit-scrollbar": {
-            width: "3.9px" 
-          },
-          "&::-webkit-scrollbar-track": {
-            background: "rgb(43 43 64 / 61%)",
-          },
-          "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "rgb(108 108 120)",
-          borderRadius: "20px"
-          }
-        }}>
-          {
-          currencies.map((coin) => 
-            <Currencies
-              key={coin.name}
-              name={coin.name} 
-              image={coin.image} 
-              currentPrice={coin.current_price}
-              marketCap={coin.market_cap}
-              id={coin.id}
-              pickedCurrency={currency}
-              />
-          )}
+        <Box sx={{position: "relative", width: "100%", height: "100%"}}>
+          <Box sx={{
+            overflowY: "auto",
+            position: "absolute",
+            height: "100%",
+            "&::-webkit-scrollbar": {
+              width: "3.9px" 
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "rgb(43 43 64 / 61%)",
+            },
+            "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgb(108 108 120)",
+            borderRadius: "20px"
+            }
+          }}>
+            {
+            currencies.map((coin) => 
+              <Currencies
+                key={coin.name}
+                name={coin.name} 
+                image={coin.image} 
+                currentPrice={coin.current_price}
+                marketCap={coin.market_cap}
+                id={coin.id}
+                pickedCurrency={currency}
+                />
+            )}
+          </Box>
         </Box>
       }
     </Box>

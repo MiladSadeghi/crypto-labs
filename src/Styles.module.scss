@@ -1,0 +1,117 @@
+.openCapitalization {
+  display: none;
+}
+
+@media screen and (max-width: 1200px) {
+  .tradingView {
+    height: 500px;
+  }
+  .capitalization {
+    position: fixed !important;
+    top: 0;
+    right: -100%;
+    background: rgb(21, 21, 32);
+    width: 300px;
+    height: 100%;
+    transition: right 0.3s ease-in-out;
+  }
+  .openCapitalization {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 50%;
+    height: 19px;
+    width: 24px;
+    transition: right 0.4s ease-in-out;
+    .checkbox {
+      position: absolute;
+      display: block;
+      height: 20px;
+      width: 24px;
+      z-index: 5;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .line1 {
+      transform-origin: 0% 0%;
+      transition: transform 0.4s ease-in-out;
+    }
+    .line2 {
+      transform-origin: 0% 0%;
+      transition: transform 0.15s ease-in-out;
+    }
+    .line3 {
+      transform-origin: 0% 100%;
+      transition: transform 0.4s ease-in-out;
+    }
+
+    .checkbox:checked ~ .line1 {
+      transform: rotate(45deg);
+    }
+    .checkbox:checked ~ .line2 {
+      transform: scaleY(0);
+    }
+
+    .checkbox:checked ~ .line3 {
+      transform: rotate(-45deg);
+    }
+
+    div {
+      width: 100%;
+      height: 3px;
+      background: #dfdfdf;
+    }
+  }
+  .showCap {
+    right: 0;
+  }
+  .moveIcon {
+    right: 304px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .statBar {
+    flex-direction: row !important;
+    margin: 24px 0;
+    .statBarHeader {
+      flex-direction: column;
+      justify-content: space-between;
+      margin-top: 0;
+      div {
+        border-radius: 12px;
+
+        &:not(:nth-child(4)) {
+          margin-bottom: 15px;
+        }
+      }
+    }
+    .statBarContent {
+      flex-direction: column;
+      width: 100%;
+      justify-content: unset;
+      padding: 0 15px;
+      .numbers,
+      .circulate {
+        margin-bottom: 30px;
+        padding: 0;
+      }
+      .circulate {
+        margin: 15px 0 0 0;
+      }
+    }
+  }
+  .progressBar {
+    width: 80% !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .priceSection {
+    flex-direction: column;
+  }
+}
