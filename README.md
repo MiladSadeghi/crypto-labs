@@ -12,7 +12,7 @@
 
 </div>
 
-<a href="https://crypto-labs.miladsdgh.ir/"><h5 align="center">Demo</h5></a>
+<h5 align="center"><a href="https://crypto-labs.miladsdgh.ir/" >Demo</a></h5>
 
 ---
 
